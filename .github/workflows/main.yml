@@ -1,4 +1,3 @@
-
 name: Genius APK Studio Build
 
 on:
@@ -11,10 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Find and extract ZIP
+        run: |
+          ZIP=$(find . -maxdepth 1 -name 'Genius_APK_Studio_v3_Complete.zip' -print -quit)
+          test -n "$ZIP"
+          unzip -q "$ZIP" -d extracted
+          test -f extracted/Genius_APK_Studio/settings.gradle
+
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -22,22 +28,15 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
 
-      - name: Extract Studio ZIP
+      - name: Build APK
         run: |
-          unzip -q Genius_APK_Studio_Upgrade.zip -d extracted
-          test -f extracted/genius_mvp/settings.gradle
-
-      - name: Build Android APK
-        run: |
-          cd extracted/genius_mvp
+          cd extracted/Genius_APK_Studio
           gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Genius-APK-Studio
-          path: extracted/genius_mvp/app/build/outputs/apk/debug/*.apk
+          name: Genius-APK-Studio-v3
+          path: extracted/Genius_APK_Studio/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
