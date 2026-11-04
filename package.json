@@ -1,0 +1,14 @@
+{
+  "name": "genius-apk-studio-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0"
+  }
+}
